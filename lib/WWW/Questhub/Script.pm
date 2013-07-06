@@ -46,6 +46,8 @@ sub list {
     my @unknown_options;
     my $option_user;
     my $option_status;
+    my @option_with_tags;
+    my @option_without_tags;
 
     foreach my $option (@options) {
         if ($option =~ /^--owner=(.*)$/) {
@@ -60,6 +62,22 @@ sub list {
                 print "Error. Got unknown status value '$option_status'\n";
                 exit 1;
             };
+        } elsif ($option =~ /^--tags=(.*)$/)  {
+
+            my @tags = split /(?=[\+-])/, $1;
+
+            foreach my $tag (@tags) {
+                if ($tag =~ /^\+(.+)$/) {
+                    push @option_with_tags, $1;
+                } elsif ($tag =~ /^\-(.+)/) {
+                    push @option_without_tags, $1;
+                } else {
+                    croak "Error. Incorrect tag '$tag'\n";
+                    exit 1;
+                }
+
+            }
+
         } else {
             push @unknown_options, $option;
         }
@@ -79,7 +97,40 @@ sub list {
         ( defined $option_status ? ( status => $option_status ) : () ),
     );
 
-    foreach my $quest (@quests) {
+    my @filtered_quests;
+
+    if (@option_with_tags == 0 and @option_without_tags == 0) {
+        @filtered_quests = @quests;
+    } else {
+        foreach my $quest (@quests) {
+
+            my $quest_has_plus_tag = $false;
+            CHECK_HAS_PLUS_TAG:
+            foreach my $tag ($quest->get_tags()) {
+                my $tmp = WWW::Questhub::Util::__in_array($tag, @option_with_tags);
+                if ($tmp) {
+                    $quest_has_plus_tag = $true;
+                    last CHECK_HAS_PLUS_TAG;
+                }
+            }
+
+            my $quest_has_minus_tag = $false;
+            CHECK_HAS_MINUS_TAG:
+            foreach my $tag ($quest->get_tags()) {
+                my $tmp = WWW::Questhub::Util::__in_array($tag, @option_without_tags);
+                if ($tmp) {
+                    $quest_has_minus_tag = $true;
+                    last CHECK_HAS_MINUS_TAG;
+                }
+            }
+
+            if ($quest_has_plus_tag and not $quest_has_minus_tag) {
+                push @filtered_quests, $quest;
+            }
+        }
+    }
+
+    foreach my $quest (@filtered_quests) {
 
         my $tags = '';
         foreach my $tag ($quest->get_tags()) {
