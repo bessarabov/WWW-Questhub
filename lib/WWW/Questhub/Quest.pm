@@ -6,6 +6,7 @@ use utf8;
 use open qw(:std :utf8);
 
 use Carp;
+use Term::ANSIColor qw(colored);
 
 my $true = 1;
 my $false = '';
@@ -53,6 +54,32 @@ sub __new {
     }
 
     return $self;
+}
+
+sub print_info {
+    my ($self) = @_;
+
+    print "# WWW::Questhub::Quest all known info\n";
+    print "id:        " . colored($self->get_id(), 'yellow') . "\n";
+    print "name:      " . colored($self->get_name(), 'blue') . "\n";
+    print "author:    " . $self->get_author() . "\n";
+    print "status:    " . $self->get_status() . "\n";
+
+    my @owners = $self->get_owners();
+
+    if (@owners) {
+        print "owners:\n";
+        foreach (@owners) {
+            print " * $_\n";
+        }
+        print "\n";
+    } else {
+        print "owners:    " . colored('none', 'blue') . "\n";
+    }
+
+    print "\n";
+
+    return $false;
 }
 
 sub get_id {
