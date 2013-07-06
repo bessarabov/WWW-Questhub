@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings FATAL => 'all';
+use utf8;
+use open qw(:std :utf8);
+
+use Carp;
+use WWW::Questhub;
+
+sub main {
+
+    my $wq = WWW::Questhub->new();
+
+    my @quests = $wq->get_quests();
+
+    foreach my $quest (@quests) {
+        print $quest->get_id()
+            . " "
+            . $quest->get_name()
+            . "\n"
+            ;
+    }
+
+}
+
+main();
