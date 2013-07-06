@@ -8,6 +8,8 @@ use open qw(:std :utf8);
 use Carp;
 use Term::ANSIColor qw(colored);
 
+use WWW::Questhub::Util;
+
 my $true = 1;
 my $false = '';
 
@@ -17,19 +19,19 @@ sub __new {
     my $self = {};
     bless $self, $class;
 
-    if ($self->__value_is_defined_and_has_length($opts{_id})) {
+    if (WWW::Questhub::Util::__value_is_defined_and_has_length($opts{_id})) {
         $self->{__id} = $opts{_id};
     } else {
         croak "new() expected to recieve _id. Stopped";
     }
 
-    if ($self->__value_is_defined_and_has_length($opts{name})) {
+    if (WWW::Questhub::Util::__value_is_defined_and_has_length($opts{name})) {
         $self->{__name} = $opts{name};
     } else {
         croak "new() expected to recieve name. Stopped";
     }
 
-    if ($self->__value_is_defined_and_has_length($opts{author})) {
+    if (WWW::Questhub::Util::__value_is_defined_and_has_length($opts{author})) {
         $self->{__author} = $opts{author};
     } else {
         croak "new() expected to recieve author. Stopped";
@@ -47,7 +49,7 @@ sub __new {
         closed
     );
 
-    if ($self->__in_array($opts{status}, @known_states)) {
+    if (WWW::Questhub::Util::__in_array($opts{status}, @known_states)) {
         $self->{__status} = $opts{status};
     } else {
         croak "new() got unexpected status '" . $opts{status} . "'. Stopped";
@@ -110,29 +112,6 @@ sub get_owners {
     my @owners = @{$self->{__owners}};
 
     return @owners;
-}
-
-sub __value_is_defined_and_has_length {
-    my ($self, $value) = @_;
-
-    return $false if not defined $value;
-    return $false if $value eq '';
-    return $false if ref $value;
-
-    return $true;
-}
-
-sub __in_array {
-    my ($self, $value, @array) = @_;
-
-    my %a = map { $_ => 1 } @array;
-
-    if(exists($a{$value})) {
-        return $true;
-    } else {
-        return $false;
-    }
-
 }
 
 1;
