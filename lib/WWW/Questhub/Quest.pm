@@ -98,18 +98,18 @@ sub get_status {
     return $self->{__status};
 }
 
-sub get_owners {
-    my ($self) = @_;
-
-    my @owners = @{$self->{__team}};
-
-    return @owners;
-}
-
 sub get_author {
     my ($self) = @_;
 
     return $self->{__author};
+}
+
+sub get_owners {
+    my ($self) = @_;
+
+    my @owners = @{$self->{__owners}};
+
+    return @owners;
 }
 
 sub __value_is_defined_and_has_length {
