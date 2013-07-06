@@ -52,11 +52,19 @@ sub get {
 sub get_quests {
     my ($self, %opts) = @_;
 
-    croak "get_quests() shoud not recieve any options. Stopped" if %opts;
+    my $option_user = delete $opts{user};
+
+    my @unknown_options = keys %opts;
+    if (@unknown_options) {
+        croak "get_quests() got unknown option: '"
+            . join("', '", @unknown_options)
+            . "'. Stopped";
+    }
 
     my $url = URI->new($self->__get_server());
     $url->path('/api/quest');
     $url->query_form(
+        ( defined $option_user ? ( user => $option_user ) : () ),
     );
 
     my $json = $self->get( $url->as_string() );

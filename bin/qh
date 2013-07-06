@@ -13,7 +13,7 @@ sub main {
 
     my $wqs = WWW::Questhub::Script->__new();
 
-    my $command = $ARGV[0];
+    my $command = shift @ARGV;
     my @options = @ARGV;
 
     if (not defined $command) {

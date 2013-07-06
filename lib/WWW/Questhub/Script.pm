@@ -40,11 +40,31 @@ sub __is_known_command {
 }
 
 sub list {
-    my ($self) = @_;
+    my ($self, @options) = @_;
+
+    my @unknown_options;
+    my $option_user;
+
+    foreach my $option (@options) {
+        if ($option =~ /^--owner=(.*)$/) {
+            $option_user = $1;
+        } else {
+            push @unknown_options, $option;
+        }
+    }
+
+    if (@unknown_options) {
+        print "Error. `qh list` got unknown option: '"
+            . join("', '", @unknown_options)
+            . "'.\n";
+        exit 1;
+    }
 
     my $wq = WWW::Questhub->new();
 
-    my @quests = $wq->get_quests();
+    my @quests = $wq->get_quests(
+        ( defined $option_user ? ( user => $option_user ) : () ),
+    );
 
     foreach my $quest (@quests) {
         print $quest->get_id()
