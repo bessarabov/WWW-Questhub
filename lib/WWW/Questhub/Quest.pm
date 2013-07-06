@@ -43,11 +43,7 @@ sub __new {
         croak "new() expected to recieve team arrayref. Stopped";
     }
 
-    my @known_states = qw(
-        open
-        abandoned
-        closed
-    );
+    my @known_states = WWW::Questhub::Util::__get_known_quest_states();
 
     if (WWW::Questhub::Util::__in_array($opts{status}, @known_states)) {
         $self->{__status} = $opts{status};

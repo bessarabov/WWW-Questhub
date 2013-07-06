@@ -35,4 +35,14 @@ sub __in_array {
 
 }
 
+sub __get_known_quest_states {
+    my @states = qw(
+        open
+        abandoned
+        closed
+    );
+
+    return @states;
+}
+
 1;

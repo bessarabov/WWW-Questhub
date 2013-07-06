@@ -53,6 +53,7 @@ sub get_quests {
     my ($self, %opts) = @_;
 
     my $option_user = delete $opts{user};
+    my $option_status = delete $opts{status};
 
     my @unknown_options = keys %opts;
     if (@unknown_options) {
@@ -65,6 +66,7 @@ sub get_quests {
     $url->path('/api/quest');
     $url->query_form(
         ( defined $option_user ? ( user => $option_user ) : () ),
+        ( defined $option_status ? ( status => $option_status ) : () ),
     );
 
     my $json = $self->get( $url->as_string() );

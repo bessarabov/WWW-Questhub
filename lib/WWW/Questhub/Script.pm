@@ -44,10 +44,21 @@ sub list {
 
     my @unknown_options;
     my $option_user;
+    my $option_status;
 
     foreach my $option (@options) {
         if ($option =~ /^--owner=(.*)$/) {
             $option_user = $1;
+        } elsif ($option =~ /^--status=(.*)$/)  {
+            $option_status = $1;
+            my $status_is_known = WWW::Questhub::Util::__in_array(
+                $option_status,
+                WWW::Questhub::Util::__get_known_quest_states(),
+            );
+            if (not $status_is_known) {
+                print "Error. Got unknown status value '$option_status'\n";
+                exit 1;
+            };
         } else {
             push @unknown_options, $option;
         }
@@ -64,10 +75,13 @@ sub list {
 
     my @quests = $wq->get_quests(
         ( defined $option_user ? ( user => $option_user ) : () ),
+        ( defined $option_status ? ( status => $option_status ) : () ),
     );
 
     foreach my $quest (@quests) {
         print $quest->get_id()
+            . " "
+            . $quest->get_status()
             . " "
             . $quest->get_name()
             . "\n"
