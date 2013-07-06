@@ -6,20 +6,28 @@ use utf8;
 use open qw(:std :utf8);
 
 use Carp;
-use WWW::Questhub;
+
+use WWW::Questhub::Script;
 
 sub main {
 
-    my $wq = WWW::Questhub->new();
+    my $wqs = WWW::Questhub::Script->__new();
 
-    my @quests = $wq->get_quests();
+    my $command = $ARGV[0];
+    my @options = @ARGV;
 
-    foreach my $quest (@quests) {
-        print $quest->get_id()
-            . " "
-            . $quest->get_name()
-            . "\n"
-            ;
+    if (not defined $command) {
+        print "No. You should run `qh` with some command.\n";
+        print "Plese try:\n";
+        print "\n";
+        print "    qh list\n";
+        print "\n";
+        exit 1;
+    } elsif ($wqs->__is_known_command($command)) {
+        $wqs->$command(@options);
+    } else {
+        print "Error. Unknown command '$command'\n";
+        exit 1;
     }
 
 }

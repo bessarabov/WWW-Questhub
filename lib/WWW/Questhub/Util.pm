@@ -23,6 +23,8 @@ sub __value_is_defined_and_has_length {
 sub __in_array {
     my ($value, @array) = @_;
 
+    croak "value should be defined" if not __value_is_defined_and_has_length($value);
+
     my %a = map { $_ => 1 } @array;
 
     if(exists($a{$value})) {
