@@ -98,7 +98,7 @@ sub __set_agent {
 sub __get_agent {
     my ($self) = @_;
 
-    return $self->{__get_agent};
+    return $self->{__agent};
 }
 
 1;
