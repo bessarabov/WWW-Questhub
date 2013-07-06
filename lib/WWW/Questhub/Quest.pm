@@ -34,6 +34,18 @@ sub __new {
         croak "new() expected to recieve team arrayref. Stopped";
     }
 
+    my @known_states = qw(
+        open
+        abandoned
+        closed
+    );
+
+    if ($self->__in_array($opts{status}, @known_states)) {
+        $self->{__status} = $opts{status};
+    } else {
+        croak "new() got unexpected status '" . $opts{status} . "'. Stopped";
+    }
+
     return $self;
 }
 
@@ -45,6 +57,12 @@ sub get_id {
 sub get_name {
     my ($self) = @_;
     return $self->{__name};
+}
+
+sub get_status {
+    my ($self) = @_;
+
+    return $self->{__status};
 }
 
 sub get_owners {
@@ -94,6 +112,19 @@ sub __value_is_defined_and_has_length {
     return $false if ref $value;
 
     return $true;
+}
+
+sub __in_array {
+    my ($self, $value, @array) = @_;
+
+    my %a = map { $_ => 1 } @array;
+
+    if(exists($a{$value})) {
+        return $true;
+    } else {
+        return $false;
+    }
+
 }
 
 1;
