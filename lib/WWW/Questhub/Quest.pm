@@ -28,6 +28,12 @@ sub __new {
         croak "new() expected to recieve name. Stopped";
     }
 
+    if ($self->__value_is_defined_and_has_length($opts{author})) {
+        $self->{__author} = $opts{author};
+    } else {
+        croak "new() expected to recieve author. Stopped";
+    }
+
     if (ref $opts{team} eq 'ARRAY') {
         $self->{__owners} = $opts{team};
     } else {
@@ -73,36 +79,11 @@ sub get_owners {
     return @owners;
 }
 
-sub has_one_owner {
+sub get_author {
     my ($self) = @_;
 
-    my @owners = $self->get_owners();
-    if (@owners == 1) {
-        return $true;
-    } else {
-        return $false;
-    }
+    return $self->{__author};
 }
-
-sub get_owner {
-    my ($self) = @_;
-
-    my @owners = $self->get_owners();
-
-    if (@owners == 1) {
-
-        return $owners[0];
-
-    } else {
-        croak "Can't get quest "
-            . $self->get_id()
-            . " owner. This quest have "
-            . scalar(@owners)
-            . " owners."
-            ;
-    }
-}
-
 
 sub __value_is_defined_and_has_length {
     my ($self, $value) = @_;
