@@ -60,8 +60,8 @@ sub print_info {
     print "# WWW::Questhub::Quest all known info\n";
     print "id:        " . colored($self->get_id(), 'yellow') . "\n";
     print "name:      " . colored($self->get_name(), 'blue') . "\n";
+    print "status:    " . colored($self->get_status(), 'blue') . "\n";
     print "author:    " . $self->get_author() . "\n";
-    print "status:    " . $self->get_status() . "\n";
 
     my @owners = $self->get_owners();
 

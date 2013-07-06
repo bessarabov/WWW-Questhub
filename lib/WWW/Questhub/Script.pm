@@ -6,6 +6,7 @@ use utf8;
 use open qw(:std :utf8);
 
 use Carp;
+use Term::ANSIColor qw(colored);
 
 use WWW::Questhub;
 use WWW::Questhub::Util;
@@ -79,9 +80,9 @@ sub list {
     );
 
     foreach my $quest (@quests) {
-        print $quest->get_id()
+        print colored($quest->get_id(), 'yellow')
             . " "
-            . $quest->get_status()
+            . colored($quest->get_status(), 'blue')
             . " "
             . $quest->get_name()
             . "\n"
