@@ -43,6 +43,19 @@ sub __new {
         croak "new() expected to recieve team arrayref. Stopped";
     }
 
+    if (ref $opts{tags} eq 'ARRAY') {
+        $self->{__tags} = $opts{tags};
+    } else {
+        # Sometimes there is no `tags` key in the quest data
+        # https://github.com/berekuk/play-perl/issues/116
+        # I think this is a bug, when it will be fixed, I need to delete the
+        # next line and to uncomment the other line
+
+        $self->{__tags} = [];
+
+        #croak "new() expected to recieve tags arrayref. Stopped";
+    }
+
     my @known_states = WWW::Questhub::Util::__get_known_quest_states();
 
     if (WWW::Questhub::Util::__in_array($opts{status}, @known_states)) {
@@ -73,6 +86,18 @@ sub print_info {
         print "\n";
     } else {
         print "owners:    " . colored('none', 'blue') . "\n";
+    }
+
+    my @tags = $self->get_tags();
+
+    if (@tags) {
+        print "tags:\n";
+        foreach (@tags) {
+            print " * " . colored($_, 'magenta') . "\n";
+        }
+        print "\n";
+    } else {
+        print "tags:      " . colored('none', 'blue') . "\n";
     }
 
     print "\n";
@@ -108,6 +133,14 @@ sub get_owners {
     my @owners = @{$self->{__owners}};
 
     return @owners;
+}
+
+sub get_tags {
+    my ($self) = @_;
+
+    my @tags = @{$self->{__tags}};
+
+    return @tags;
 }
 
 1;

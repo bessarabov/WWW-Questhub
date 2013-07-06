@@ -80,10 +80,19 @@ sub list {
     );
 
     foreach my $quest (@quests) {
+
+        my $tags = '';
+        foreach my $tag ($quest->get_tags()) {
+            $tags .= colored($tag, 'magenta') . ", ";
+        }
+        $tags = substr($tags, 0, length($tags) - 2);
+        $tags .= " " if length($tags) > 0;
+
         print colored($quest->get_id(), 'yellow')
             . " "
             . colored($quest->get_status(), 'blue')
             . " "
+            . $tags
             . $quest->get_name()
             . "\n"
             ;
