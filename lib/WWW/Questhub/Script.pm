@@ -124,8 +124,18 @@ sub list {
                 }
             }
 
-            if ($quest_has_plus_tag and not $quest_has_minus_tag) {
-                push @filtered_quests, $quest;
+            if (@option_with_tags != 0 and @option_without_tags == 0) {
+                if ($quest_has_plus_tag) {
+                    push @filtered_quests, $quest;
+                }
+            } elsif (@option_with_tags == 0 and @option_without_tags != 0) {
+                if (not $quest_has_minus_tag) {
+                    push @filtered_quests, $quest;
+                }
+            } else {
+                if ($quest_has_plus_tag and not $quest_has_minus_tag) {
+                    push @filtered_quests, $quest;
+                }
             }
         }
     }
