@@ -43,6 +43,12 @@ sub __new {
         croak "new() expected to recieve team arrayref. Stopped";
     }
 
+    if (ref $opts{likes} eq 'ARRAY') {
+        $self->{__likes} = $opts{likes};
+    } else {
+        $self->{__likes} = [];
+    }
+
     if (ref $opts{tags} eq 'ARRAY') {
         $self->{__tags} = $opts{tags};
     } else {
@@ -141,6 +147,14 @@ sub get_tags {
     my @tags = @{$self->{__tags}};
 
     return @tags;
+}
+
+sub get_likes_count {
+    my ($self) = @_;
+
+    my $count = scalar @{$self->{__likes}};
+
+    return $count;
 }
 
 1;
