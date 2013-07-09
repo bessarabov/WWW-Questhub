@@ -151,6 +151,8 @@ sub list {
 
         print colored($quest->get_id(), 'yellow')
             . " "
+            . colored($quest->get_likes_count(), 'red')
+            . " "
             . colored($quest->get_status(), 'blue')
             . " "
             . $tags
